@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Anasayfa";
+}
+
+@using KuzeyYeliCircloidTemplate.Models
+@model List<Urunler>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="block-heading">
+                <div class="main-text h2">
+                    Ürünler Listesi
+                </div>
+                <div class="block-controls">
+
+                    <span aria-hidden="true" class="icon icon-arrow-down icon-size-medium block-control-collapse"></span>
+                    <a class="btn btn-success" href="/Urun/UrunEkle">Yeni Ürün Ekle</a>
+                </div>
+            </div>
+            <div class="block-content-outer">
+                <div class="block-content-inner">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Tedarikçi</th>
+                                <th>Kategori</th>
+                                <th>Birimdeki Miktar</th>
+                                <th>Fiyat</th>
+                                <th>Stok</th>
+                                <th>Yeni Satış</th>
+                                <th>En Az Yeniden Satış Miktarı</th>
+                                <th>Sonlandı</th>
+                                <th>Sepete Ekle</th>
+                                <th>Detay</th>
+                                <th>Sil</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Urunler urun in Model)
+                            {
+                                <tr>
+                                    <td>@urun.UrunAdi</td>
+                                    @if (urun.Tedarikciler == null)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="label label-primary">@urun.Tedarikciler.SirketAdi</span></td>
+                                    }
+
+                                    @if (urun.Kategoriler == null)
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@urun.Kategoriler.KategoriAdi</td>
+                                    }
+
+
+                                    <td>@urun.BirimdekiMiktar</td>
+                                    <td>@urun.Fiyat</td>
+                                    <td>@urun.Stok</td>
+                                    <td>@urun.YeniSatis</td>
+                                    <td>@urun.EnAzYenidenSatisMikatari</td>
+                                    @if (urun.Sonlandi)
+                                    {
+                                        <td><span class="label label-danger">Stokta Yok</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="label label-success">Stokta Var</span></td>
+                                    }
+                                    <td><a class="btn btn-default sepeteAt" data-id="@urun.UrunID" href="#">Sepete Ekle</a></td>
+                                    <td><a class="btn btn-primary" href="/Urun/UrunDetay?id=@urun.UrunID">Detay</a></td>
+                                    <td><a class="btn btn-danger" href="/Urun/UrunSil/@urun.UrunID">Sil</a></td>
+                                </tr>
+
+                            }
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Content/assets/js/required/jquery-1.11.1.min.js"></script>
+    <script>
+        $(".sepeteAt").click(function () {
+            var id = $(this).data("id");
+            $.ajax({
+                type: "POST",
+                url: "/Urun/SepeteAt/" + id,
+                success: function () {
+                    alert("Ürün Sepete Atıldı");
+                },
+                error: function () {
+                    alert("Ürün Sepete Atılırken Hata Oluştu.");
+                }
+            });
+        
+        });
+    </script>
+
+
+}
